@@ -10,6 +10,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.input.XBoxInput;
+import frc.systems.WheelSystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -23,7 +25,8 @@ public class Robot extends TimedRobot {
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
-
+  private XBoxInput input;
+  private WheelSystem wheels;
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -33,6 +36,9 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
+
+    input = new XBoxInput();
+    wheels = new WheelSystem();
   }
 
   /**
@@ -86,6 +92,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    wheels.run();
   }
 
   /**
