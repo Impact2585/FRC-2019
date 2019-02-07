@@ -9,5 +9,8 @@
     "bin/": true,
     ".classpath": true,
     ".project": true
-  }
+  },
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "files.eol": "\n",
 }

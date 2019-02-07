@@ -13,18 +13,25 @@ import frc.input.XBoxInput;
  * Parent class of the systems that run on the robot
  */
 public abstract class RobotSystem {
-    protected XBoxInput input;
+  protected XBoxInput input;
 
-    /**
-     * Initializes the system
-     * @param input the object that gives the controller input from the user
-     */
-    public void init(XBoxInput input) {
-		this.input = input;
-    }
-    
-    /**
-     * Runs the system. Intended to be called periodically and rapidly
-     */
-    public abstract void run();
+  /**
+   * Creates a new RobotSystem
+   * 
+   * @param input the object that gives the controller input from the user
+   */
+  public RobotSystem(XBoxInput input) {
+    this.input = input;
+  }
+
+  /**
+   * Initializes the motors and other elements of the system. 
+   * Separate from constructor to allow skipping during testing.
+   */
+  public abstract void init();
+
+  /**
+   * Runs the system. Intended to be called periodically and rapidly
+   */
+  public abstract void run();
 }

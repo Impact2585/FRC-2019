@@ -14,18 +14,18 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
  * Add your docs here.
  */
 public class XBoxInput {
-    private XboxController controller;
+  private XboxController controller;
 
-    public XBoxInput() {
-        // 0 is the port # of the driver station the joystick is plugged into
-        controller = new XboxController(0);
-    }
+  public XBoxInput() {
+    // 0 is the port # of the driver station the joystick is plugged into
+    controller = new XboxController(0);
+  }
 
-    public double forwardAmount() {
-		return controller.getY(Hand.kLeft);
-    }
-    
-    public double turnAmount() {
-		return controller.getX(Hand.kRight);
-	}
+  public double forwardAmount() {
+    return controller.getY(Hand.kLeft);
+  }
+
+  public double turnAmount() {
+    return controller.getX(Hand.kRight);
+  }
 }

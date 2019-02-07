@@ -16,18 +16,26 @@ import frc.robot.RobotMap;
  * Controls the drivetrain of the robot
  */
 public class WheelSystem extends RobotSystem {
-    private DifferentialDrive wheels;
+  private DifferentialDrive wheels;
 
-    @Override
-    public void init(XBoxInput input) {
-        super.init(input);
-        Spark leftMotor = new Spark(RobotMap.LEFT_DRIVE_MOTOR);
-        Spark rightMotor = new Spark(RobotMap.RIGHT_DRIVE_MOTOR);
-        wheels = new DifferentialDrive(leftMotor, rightMotor);
-    }
+  /**
+   * Creates a new wheelSystem
+   * 
+   * @param input the controller input object
+   */
+  public WheelSystem(XBoxInput input) {
+    super(input);
+  }
 
-    @Override
-    public void run() {
-        wheels.arcadeDrive(input.forwardAmount(), input.turnAmount());
-    }
+  @Override
+  public void init() {
+    Spark leftMotor = new Spark(RobotMap.LEFT_DRIVE_MOTOR);
+    Spark rightMotor = new Spark(RobotMap.RIGHT_DRIVE_MOTOR);
+    wheels = new DifferentialDrive(leftMotor, rightMotor);
+  }
+
+  @Override
+  public void run() {
+    wheels.arcadeDrive(input.forwardAmount(), input.turnAmount());
+  }
 }
