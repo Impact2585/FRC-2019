@@ -13,4 +13,7 @@ package frc.robot;
 public class RobotMap {
   public static final int LEFT_DRIVE_MOTOR = 0;
   public static final int RIGHT_DRIVE_MOTOR = 1;
+  public static final int INTAKE_PIVOT_MOTOR = 2;
+  public static final int INTAKE_FRONT_MOTOR = 3; // wheels in the front of the intake
+  public static final int INTAKE_BACK_MOTOR = 4; // wheels in the back of the intake(nearer the elevator)
 }

@@ -17,6 +17,8 @@ import frc.robot.RobotMap;
  */
 public class WheelSystem extends RobotSystem {
   private DifferentialDrive wheels;
+  private final double driveConstant = 0.8;
+  private final double turnConstant = 0.8;
 
   /**
    * Creates a new wheelSystem
@@ -36,6 +38,6 @@ public class WheelSystem extends RobotSystem {
 
   @Override
   public void run() {
-    wheels.arcadeDrive(input.forwardAmount(), input.turnAmount());
+    wheels.arcadeDrive(input.forwardAmount() * driveConstant, input.turnAmount() * turnConstant);
   }
 }
