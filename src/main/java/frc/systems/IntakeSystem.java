@@ -8,36 +8,41 @@
 package frc.systems;
 
 import edu.wpi.first.wpilibj.Spark;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.input.XBoxInput;
 import frc.robot.RobotMap;
 
 /**
  * Controls the drivetrain of the robot
  */
-public class WheelSystem extends RobotSystem {
-  private DifferentialDrive wheels;
-  private final double driveConstant = 0.8;
-  private final double turnConstant = 0.8;
-
+public class IntakeSystem extends RobotSystem {
+  private final double pivotSpeedConst = 0.3;
+  private final double intakeWheelConst = 0.8;
+  private Spark pivotMotor = new Spark(RobotMap.INTAKE_PIVOT_MOTOR);
+  private Spark frontMotor = new Spark(RobotMap.INTAKE_FRONT_MOTOR);
+  private Spark backMotor = new Spark(RobotMap.INTAKE_BACK_MOTOR);
   /**
    * Creates a new wheelSystem
    * 
    * @param input the controller input object
    */
-  public WheelSystem(XBoxInput input) {
+  public IntakeSystem(XBoxInput input) {
     super(input);
   }
 
   @Override
   public void init() {
-    Spark leftMotor = new Spark(RobotMap.LEFT_DRIVE_MOTOR);
-    Spark rightMotor = new Spark(RobotMap.RIGHT_DRIVE_MOTOR);
-    wheels = new DifferentialDrive(leftMotor, rightMotor);
+    pivotMotor = new Spark(RobotMap.INTAKE_PIVOT_MOTOR);
+    frontMotor = new Spark(RobotMap.INTAKE_FRONT_MOTOR);
+    backMotor = new Spark(RobotMap.INTAKE_BACK_MOTOR);
+    backMotor.setInverted(true); // set back motor to opposite direction
   }
 
   @Override
   public void run() {
-    wheels.arcadeDrive(input.forwardAmount() * driveConstant, input.turnAmount() * turnConstant);
+    pivotMotor.setSpeed(input.intakePivot() * pivotSpeedConst);
+    
+    frontMotor.setSpeed(input.runIntakeWheel() * intakeWheelConst);
+    backMotor.setSpeed(input.runIntakeWheel() * intakeWheelConst);
+
   }
 }
