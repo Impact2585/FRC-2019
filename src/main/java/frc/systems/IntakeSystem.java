@@ -12,7 +12,7 @@ import frc.input.XBoxInput;
 import frc.robot.RobotMap;
 
 /**
- * Controls the drivetrain of the robot
+ * Controls the intake system of the robot
  */
 public class IntakeSystem extends RobotSystem {
   private final double pivotSpeedConst = 0.3;
@@ -21,7 +21,7 @@ public class IntakeSystem extends RobotSystem {
   private Spark frontMotor = new Spark(RobotMap.INTAKE_FRONT_MOTOR);
   private Spark backMotor = new Spark(RobotMap.INTAKE_BACK_MOTOR);
   /**
-   * Creates a new wheelSystem
+   * Creates a new intakeSystem
    * 
    * @param input the controller input object
    */
