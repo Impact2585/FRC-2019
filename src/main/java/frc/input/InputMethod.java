@@ -1,4 +1,3 @@
-
 /*----------------------------------------------------------------------------*/
 /* Copyright (c) 2018 FIRST. All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
@@ -6,15 +5,33 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+package frc.input;
 
 /**
- * Add your docs here.
+ * Operator controls for the robot
  */
-public class ExampleTest {
-  @Test
-  public void examplePassingTest() {
-    assertTrue(true);
+public abstract class InputMethod {
+  public double forwardAmount() {
+    return 0;
+  }
+
+  public double turnAmount() {
+    return 0;
+  }
+
+  public boolean shouldPivotUp() {
+    return false;
+  }
+
+  public boolean shouldPivotDown() {
+    return false;
+  }
+
+  public boolean shouldIntake() {
+    return false;
+  }
+
+  public boolean shouldOuttake() {
+    return false;
   }
 }

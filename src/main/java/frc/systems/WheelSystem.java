@@ -9,23 +9,24 @@ package frc.systems;
 
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import frc.input.XBoxInput;
+import frc.input.InputMethod;
 import frc.robot.RobotMap;
 
 /**
  * Controls the drivetrain of the robot
  */
 public class WheelSystem extends RobotSystem {
+  private final double DRIVE_AMT = 0.8;
+  private final double TURN_AMT = 0.8;
+
   private DifferentialDrive wheels;
-  private final double driveConstant = 0.8;
-  private final double turnConstant = 0.8;
 
   /**
    * Creates a new wheelSystem
    * 
    * @param input the controller input object
    */
-  public WheelSystem(XBoxInput input) {
+  public WheelSystem(InputMethod input) {
     super(input);
   }
 
@@ -38,6 +39,6 @@ public class WheelSystem extends RobotSystem {
 
   @Override
   public void run() {
-    wheels.arcadeDrive(input.forwardAmount() * driveConstant, input.turnAmount() * turnConstant);
+    wheels.arcadeDrive(input.forwardAmount() * DRIVE_AMT, input.turnAmount() * TURN_AMT);
   }
 }

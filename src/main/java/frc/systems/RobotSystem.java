@@ -7,20 +7,20 @@
 
 package frc.systems;
 
-import frc.input.XBoxInput;
+import frc.input.InputMethod;
 
 /**
  * Parent class of the systems that run on the robot
  */
 public abstract class RobotSystem {
-  protected XBoxInput input;
+  protected InputMethod input;
 
   /**
    * Creates a new RobotSystem
    * 
    * @param input the object that gives the controller input from the user
    */
-  public RobotSystem(XBoxInput input) {
+  public RobotSystem(InputMethod input) {
     this.input = input;
   }
 
