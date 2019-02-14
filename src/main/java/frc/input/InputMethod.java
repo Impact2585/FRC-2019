@@ -34,4 +34,12 @@ public abstract class InputMethod {
   public boolean shouldOuttake() {
     return false;
   }
+
+  public boolean shouldLiftElevator(){
+    return false;
+  }
+
+  public boolean shouldLowerElevator(){
+    return false;
+  }
 }
