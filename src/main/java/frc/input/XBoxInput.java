@@ -55,4 +55,14 @@ public class XBoxInput extends InputMethod {
   public boolean shouldOuttake() {
     return controller.getTriggerAxis(Hand.kRight) > TRIGGER_DEAD_ZONE;
   }
+
+  @Override
+  public boolean shouldLiftElevator(){
+    return controller.getAButton();
+  }
+
+  @Override
+  public boolean shouldLowerElevator(){
+    return controller.getBButton();
+  }
 }

@@ -18,4 +18,6 @@ public class RobotMap {
 
   public static final int INTAKE_FRONT_MOTOR = 3; // wheels in the front of the intake
   public static final int INTAKE_BACK_MOTOR = 4; // wheels in the back of the intake(nearer the elevator)
+
+  public static final int ELEVATOR_MOTOR = 5;
 }
