@@ -10,17 +10,23 @@ package frc.systems;
 import edu.wpi.first.wpilibj.Spark;
 import frc.input.InputMethod;
 import frc.robot.RobotMap;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.*;
+
 
 /**
  * Controls the intake system of the robot
  */
 public class IntakeSystem extends RobotSystem {
-  private final double PIVOT_SPEED = 0.3;
+  private final double PIVOT_SPEED = 1;
   private final double WHEEL_SPEED = 0.8;
   
   private Spark pivotMotor;
   private Spark frontMotor;
   private Spark backMotor;
+
+  private DigitalInput pivotLimitUpper;
+  private DigitalInput pivotLimitLower;
 
   /**
    * Creates a new intakeSystem
@@ -36,7 +42,8 @@ public class IntakeSystem extends RobotSystem {
     pivotMotor = new Spark(RobotMap.INTAKE_PIVOT_MOTOR);
     frontMotor = new Spark(RobotMap.INTAKE_FRONT_MOTOR);
     backMotor = new Spark(RobotMap.INTAKE_BACK_MOTOR);
-    backMotor.setInverted(true); // set back motor to opposite direction
+    pivotLimitUpper = new DigitalInput(RobotMap.PIVOT_LIMIT_UPPER);
+    pivotLimitLower = new DigitalInput(RobotMap.PIVOT_LIMIT_LOWER);
   }
 
   @Override
@@ -51,10 +58,14 @@ public class IntakeSystem extends RobotSystem {
   private double getDesiredPivotSpeed() {
     if (input.shouldPivotUp() && input.shouldPivotDown())
       return 0;
+    
+    SmartDashboard.putBoolean("Upper limit", pivotLimitUpper.get());
+    SmartDashboard.putBoolean("Lower limit", pivotLimitLower.get());
 
-    if (input.shouldPivotUp()) return PIVOT_SPEED;
-    if (input.shouldPivotDown()) return -PIVOT_SPEED;
-
+    if (input.shouldPivotUp())
+      return (pivotLimitUpper.get()) ? PIVOT_SPEED : 0;
+    if (input.shouldPivotDown()) 
+      return (pivotLimitLower.get()) ? -PIVOT_SPEED : 0;
     return 0;
   }
 
@@ -83,6 +94,6 @@ public class IntakeSystem extends RobotSystem {
    */
   protected void setIntakeSpeed(double speed) {
     frontMotor.setSpeed(speed);
-    backMotor.setSpeed(speed);
+    backMotor.setSpeed(-speed);
   }
 }
