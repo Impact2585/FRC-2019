@@ -23,6 +23,6 @@ public class RobotMap {
 
   public static final int UPPER_LIMIT_DIGITAL_INPUT = 0;
   public static final int LOWER_LIMIT_DIGITAL_INPUT = 1;
-  public static final int PIVOT_LIMIT_UPPER = 2; //doesn't work
-  public static final int PIVOT_LIMIT_LOWER = 3; //works
+  public static final int PIVOT_LIMIT_UPPER = 3;
+  public static final int PIVOT_LIMIT_LOWER = 2;
 }
