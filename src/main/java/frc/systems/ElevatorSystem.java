@@ -62,10 +62,7 @@ public class ElevatorSystem extends RobotSystem {
    * Sets the speed of the lift motor
    */
   protected void setLiftSpeed(double speed) {
-    if(speed == 0)
-      elevatorMotor.stopMotor();
-    else
-      elevatorMotor.setSpeed(speed);
+    elevatorMotor.setSpeed(speed);
   }
 
 }

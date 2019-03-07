@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.*;
  * Controls the intake system of the robot
  */
 public class IntakeSystem extends RobotSystem {
-  private final double PIVOT_SPEED = 1;
+  private final double PIVOT_SPEED = 0.6;
   private final double WHEEL_SPEED = 0.8;
   
   private Spark pivotMotor;
