@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.input.XBoxInput;
 import frc.systems.WheelSystem;
+import frc.systems.IntakeSystem;
+import frc.systems.ElevatorSystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -27,6 +29,8 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   private XBoxInput input;
   private WheelSystem wheels;
+  private IntakeSystem intake;
+  private ElevatorSystem elevator;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -40,8 +44,12 @@ public class Robot extends TimedRobot {
 
     input = new XBoxInput();
     wheels = new WheelSystem(input);
+    intake = new IntakeSystem(input);
+    elevator = new ElevatorSystem(input);
 
     wheels.init();
+    intake.init();
+    elevator.init();
   }
 
   /**
@@ -98,6 +106,8 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     wheels.run();
+    intake.run();
+    elevator.run();
   }
 
   /**
