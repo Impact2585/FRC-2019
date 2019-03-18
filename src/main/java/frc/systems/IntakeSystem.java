@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.Spark;
 import frc.input.InputMethod;
 import frc.robot.RobotMap;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.smartdashboard.*;
 
 
 /**
@@ -56,22 +55,13 @@ public class IntakeSystem extends RobotSystem {
    * Returns the desired pivot motor speed based on the input
    */
   private double getDesiredPivotSpeed() {
-    if (input.shouldPivotUp() && input.shouldPivotDown())
-      return 0;
-    
-    SmartDashboard.putBoolean("Upper limit", pivotLimitUpper.get());
-    SmartDashboard.putBoolean("Lower limit", pivotLimitLower.get());
-    if (input.shouldPivotUp()){
-      if(input.ignoreLimitSwitches())
-        return PIVOT_SPEED;
-      return (pivotLimitUpper.get()) ? PIVOT_SPEED : 0;
-    } 
-    if (input.shouldPivotDown()) {
-      if(input.ignoreLimitSwitches())
-        return -PIVOT_SPEED;
-      return (pivotLimitLower.get()) ? -PIVOT_SPEED : 0;
-    }
-      return 0;
+    if(input.ignoreLimitSwitches())
+      return input.pivotIntake() * PIVOT_SPEED;
+    if(pivotLimitUpper.get())
+      return (input.pivotIntake() > 0) ? 0 : input.pivotIntake() * PIVOT_SPEED;
+    if(pivotLimitLower.get())
+      return (input.pivotIntake() < 0) ? 0 : input.pivotIntake() * PIVOT_SPEED;
+    return input.pivotIntake() * PIVOT_SPEED;
   }
 
   /**

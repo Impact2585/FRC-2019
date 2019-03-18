@@ -33,8 +33,8 @@ public class ElevatorSystem extends RobotSystem {
   @Override
   public void init() {
     elevatorMotor = new Spark(RobotMap.ELEVATOR_MOTOR);
-    upperLimit = new DigitalInput(RobotMap.UPPER_LIMIT_DIGITAL_INPUT);
-    lowerLimit = new DigitalInput(RobotMap.LOWER_LIMIT_DIGITAL_INPUT);
+    upperLimit = new DigitalInput(RobotMap.ELEVATOR_LIMIT_UPPER);
+    lowerLimit = new DigitalInput(RobotMap.ELEVATOR_LIMIT_LOWER);
   }
 
   @Override
@@ -46,20 +46,13 @@ public class ElevatorSystem extends RobotSystem {
    * Returns the desired elevator motor speed based on the input
    */
   private double getDesiredLiftSpeed() {
-    if (input.shouldLiftElevator() && input.shouldLowerElevator())
-      return 0;
-
-    if (input.shouldLiftElevator()){
-      if(input.ignoreLimitSwitches())
-        return LIFT_SPEED;
-      return (!upperLimit.get()) ? 0 : LIFT_SPEED;
-    }
-    if (input.shouldLowerElevator()){ 
-      if(input.ignoreLimitSwitches())
-        return -LIFT_SPEED;
-      return (!lowerLimit.get()) ? 0 : -LIFT_SPEED;
-    }
-    return 0;
+    if(input.ignoreLimitSwitches())
+      return input.liftElevator() * LIFT_SPEED;
+    if(upperLimit.get())
+      return (input.liftElevator() > 0) ? 0 : input.liftElevator() * LIFT_SPEED;
+    if(lowerLimit.get())
+      return (input.liftElevator() < 0) ? 0 : input.liftElevator() * LIFT_SPEED;
+    return input.liftElevator() * LIFT_SPEED;
   }
 
   /**

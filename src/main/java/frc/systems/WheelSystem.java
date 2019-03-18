@@ -16,8 +16,7 @@ import frc.robot.RobotMap;
  * Controls the drivetrain of the robot
  */
 public class WheelSystem extends RobotSystem {
-  private final double DRIVE_AMT = 0.8;
-  private final double TURN_AMT = 0.8;
+  private final double DRIVE_AMT = 1;
 
   private DifferentialDrive wheels;
 
@@ -39,7 +38,6 @@ public class WheelSystem extends RobotSystem {
 
   @Override
   public void run() {
-    wheels.tankDrive(input.leftSidePower(), input.rightSidePower(), false);
-    //wheels.arcadeDrive(input.forwardAmount() * DRIVE_AMT, input.turnAmount() * TURN_AMT);
+    wheels.tankDrive(input.leftSidePower() * DRIVE_AMT, input.rightSidePower() * DRIVE_AMT, false);
   }
 }
