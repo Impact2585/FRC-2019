@@ -19,12 +19,8 @@ public abstract class InputMethod {
     return 0;
   }
 
-  public boolean shouldPivotUp() {
-    return false;
-  }
-
-  public boolean shouldPivotDown() {
-    return false;
+  public double pivotIntake() {
+    return 0;
   }
 
   public boolean shouldIntake() {
@@ -35,15 +31,15 @@ public abstract class InputMethod {
     return false;
   }
 
-  public boolean shouldLiftElevator(){
-    return false;
-  }
-
-  public boolean shouldLowerElevator(){
-    return false;
+  public double liftElevator(){
+    return 0;
   }
 
   public boolean ignoreLimitSwitches(){
     return false;
+  }
+
+  public int chooseCamera(){
+    return 0;
   }
 }

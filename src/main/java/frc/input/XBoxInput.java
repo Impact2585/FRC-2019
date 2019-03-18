@@ -19,6 +19,7 @@ public class XBoxInput extends InputMethod {
   private final double JOYSTICK_DEAD_ZONE = 0.02;
   private final double TRIGGER_DEAD_ZONE = 0.1;
   private final double SLOW_MOVEMENT = 0.7;
+  private int currentCamera = 0;
 
   public XBoxInput() {
     // 0 is the port # of the driver station the joystick is plugged into
@@ -28,29 +29,24 @@ public class XBoxInput extends InputMethod {
 
   @Override
   public double leftSidePower() {
-    double forward = (Math.abs(controller.getY(Hand.kLeft)) > Math.abs(controller2.getY(Hand.kLeft))) ? controller.getY(Hand.kLeft) : controller2.getY(Hand.kLeft);
+    double forward = controller.getY(Hand.kLeft);
     if(Math.abs(forward) < JOYSTICK_DEAD_ZONE)
       return 0;
-    return (controller.getBumper(Hand.kRight) || controller.getBumper(Hand.kLeft) || controller2.getBumper(Hand.kRight) || controller2.getBumper(Hand.kLeft)) ? forward * SLOW_MOVEMENT : forward;
+    return (controller.getBumper(Hand.kRight) || controller.getBumper(Hand.kLeft)) ? forward * SLOW_MOVEMENT : forward;
   }
 
   @Override
   public double rightSidePower() {
-    double turn = (Math.abs(controller.getY(Hand.kRight)) > Math.abs(controller2.getY(Hand.kRight))) ? controller.getY(Hand.kRight) : controller2.getY(Hand.kRight);
-    //double turn = (Math.abs(controller.getX(Hand.kRight)) > Math.abs(controller2.getX(Hand.kRight))) ? controller.getX(Hand.kRight) : controller2.getX(Hand.kRight);
-    if(Math.abs(turn) < JOYSTICK_DEAD_ZONE)
+    double forward = controller.getY(Hand.kRight);
+    if(Math.abs(forward) < JOYSTICK_DEAD_ZONE)
       return 0;
-    return (controller.getBumper(Hand.kRight) || controller.getBumper(Hand.kLeft) || controller2.getBumper(Hand.kRight) || controller2.getBumper(Hand.kLeft)) ? turn * SLOW_MOVEMENT : turn;
+    return (controller.getBumper(Hand.kRight) || controller.getBumper(Hand.kLeft)) ? forward * SLOW_MOVEMENT : forward;
   }
 
   @Override
-  public boolean shouldPivotUp() {
-    return controller.getYButton() || controller2.getYButton();
-  }
-  
-  @Override
-  public boolean shouldPivotDown() {
-    return controller.getXButton() || controller2.getXButton();
+  public double pivotIntake() {
+    double movement = controller2.getY(Hand.kRight);
+    return (Math.abs(movement) < JOYSTICK_DEAD_ZONE) ? 0 : movement;
   }
   
   @Override
@@ -64,17 +60,26 @@ public class XBoxInput extends InputMethod {
   }
 
   @Override
-  public boolean shouldLiftElevator(){
-    return controller.getAButton() || controller2.getAButton();
-  }
-
-  @Override
-  public boolean shouldLowerElevator(){
-    return controller.getBButton() || controller2.getBButton();
+  public double liftElevator(){
+    double movement = controller2.getY(Hand.kLeft);
+    return (Math.abs(movement) < JOYSTICK_DEAD_ZONE) ? 0 : movement;
   }
 
   @Override
   public boolean ignoreLimitSwitches(){
     return controller.getStartButton() || controller2.getStartButton();
+  }
+
+  @Override
+  public int chooseCamera(){
+    if(controller2.getBumper(Hand.kLeft)){
+      currentCamera = 0;
+      return 0;
+    }
+    if(controller2.getBumper(Hand.kRight)){
+      currentCamera = 1;
+      return 1;
+    }
+    return currentCamera;
   }
 }
