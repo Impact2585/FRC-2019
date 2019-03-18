@@ -39,6 +39,7 @@ public class WheelSystem extends RobotSystem {
 
   @Override
   public void run() {
-    wheels.arcadeDrive(input.forwardAmount() * DRIVE_AMT, input.turnAmount() * TURN_AMT);
+    wheels.tankDrive(input.leftSidePower(), input.rightSidePower(), false);
+    //wheels.arcadeDrive(input.forwardAmount() * DRIVE_AMT, input.turnAmount() * TURN_AMT);
   }
 }

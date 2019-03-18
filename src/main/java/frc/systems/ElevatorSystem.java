@@ -16,7 +16,7 @@ import frc.robot.RobotMap;
  * Controls the elevator system of the robot
  */
 public class ElevatorSystem extends RobotSystem {
-  private final double LIFT_SPEED = 0.5;
+  private final double LIFT_SPEED = 0.7;
   private Spark elevatorMotor;
   private DigitalInput upperLimit;
   private DigitalInput lowerLimit;
@@ -50,9 +50,13 @@ public class ElevatorSystem extends RobotSystem {
       return 0;
 
     if (input.shouldLiftElevator()){
+      if(input.ignoreLimitSwitches())
+        return LIFT_SPEED;
       return (!upperLimit.get()) ? 0 : LIFT_SPEED;
     }
     if (input.shouldLowerElevator()){ 
+      if(input.ignoreLimitSwitches())
+        return -LIFT_SPEED;
       return (!lowerLimit.get()) ? 0 : -LIFT_SPEED;
     }
     return 0;

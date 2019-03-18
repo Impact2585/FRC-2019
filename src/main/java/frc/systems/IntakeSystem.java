@@ -61,12 +61,17 @@ public class IntakeSystem extends RobotSystem {
     
     SmartDashboard.putBoolean("Upper limit", pivotLimitUpper.get());
     SmartDashboard.putBoolean("Lower limit", pivotLimitLower.get());
-
-    if (input.shouldPivotUp())
+    if (input.shouldPivotUp()){
+      if(input.ignoreLimitSwitches())
+        return PIVOT_SPEED;
       return (pivotLimitUpper.get()) ? PIVOT_SPEED : 0;
-    if (input.shouldPivotDown()) 
+    } 
+    if (input.shouldPivotDown()) {
+      if(input.ignoreLimitSwitches())
+        return -PIVOT_SPEED;
       return (pivotLimitLower.get()) ? -PIVOT_SPEED : 0;
-    return 0;
+    }
+      return 0;
   }
 
   /**
