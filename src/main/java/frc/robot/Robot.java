@@ -10,6 +10,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.cameraserver.CameraServer;
+
 import frc.input.XBoxInput;
 import frc.systems.WheelSystem;
 import frc.systems.IntakeSystem;
@@ -42,6 +44,7 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
 
+
     input = new XBoxInput();
     wheels = new WheelSystem(input);
     intake = new IntakeSystem(input);
@@ -50,7 +53,8 @@ public class Robot extends TimedRobot {
     wheels.init();
     intake.init();
     elevator.init();
-  }
+    CameraServer.getInstance().startAutomaticCapture();
+}
 
   /**
    * This function is called every robot packet, no matter the mode. Use this for
@@ -89,15 +93,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    switch (m_autoSelected) {
-    case kCustomAuto:
-      // Put custom auto code here
-      break;
-    case kDefaultAuto:
-    default:
-      // Put default auto code here
-      break;
-    }
+    wheels.run();
+    intake.run();
+    elevator.run();
   }
 
   /**
@@ -115,5 +113,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+    wheels.run();
+    intake.run();
+    elevator.run();
   }
 }
