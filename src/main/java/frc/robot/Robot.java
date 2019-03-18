@@ -34,6 +34,7 @@ public class Robot extends TimedRobot {
   private IntakeSystem intake;
   private ElevatorSystem elevator;
 
+  private int currentCamera;
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -53,7 +54,8 @@ public class Robot extends TimedRobot {
     wheels.init();
     intake.init();
     elevator.init();
-    CameraServer.getInstance().startAutomaticCapture();
+    CameraServer.getInstance().startAutomaticCapture(0);
+    currentCamera = 0;
 }
 
   /**
@@ -67,6 +69,11 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    int inputCamera = input.chooseCamera();
+    if(inputCamera != currentCamera){
+      currentCamera = inputCamera;
+      CameraServer.getInstance().startAutomaticCapture(inputCamera);
+    }
   }
 
   /**
