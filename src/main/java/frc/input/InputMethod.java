@@ -11,11 +11,11 @@ package frc.input;
  * Operator controls for the robot
  */
 public abstract class InputMethod {
-  public double forwardAmount() {
+  public double leftSidePower() {
     return 0;
   }
 
-  public double turnAmount() {
+  public double rightSidePower() {
     return 0;
   }
 
@@ -40,6 +40,10 @@ public abstract class InputMethod {
   }
 
   public boolean shouldLowerElevator(){
+    return false;
+  }
+
+  public boolean ignoreLimitSwitches(){
     return false;
   }
 }

@@ -16,8 +16,9 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 public class XBoxInput extends InputMethod {
   private XboxController controller;
   private XboxController controller2;
-  private final double JOYSTICK_DEAD_ZONE = 0.05;
+  private final double JOYSTICK_DEAD_ZONE = 0.02;
   private final double TRIGGER_DEAD_ZONE = 0.1;
+  private final double SLOW_MOVEMENT = 0.7;
 
   public XBoxInput() {
     // 0 is the port # of the driver station the joystick is plugged into
@@ -26,15 +27,20 @@ public class XBoxInput extends InputMethod {
   }
 
   @Override
-  public double forwardAmount() {
+  public double leftSidePower() {
     double forward = (Math.abs(controller.getY(Hand.kLeft)) > Math.abs(controller2.getY(Hand.kLeft))) ? controller.getY(Hand.kLeft) : controller2.getY(Hand.kLeft);
-    return (Math.abs(forward) < JOYSTICK_DEAD_ZONE) ? 0 : forward;
+    if(Math.abs(forward) < JOYSTICK_DEAD_ZONE)
+      return 0;
+    return (controller.getBumper(Hand.kRight) || controller.getBumper(Hand.kLeft) || controller2.getBumper(Hand.kRight) || controller2.getBumper(Hand.kLeft)) ? forward * SLOW_MOVEMENT : forward;
   }
 
   @Override
-  public double turnAmount() {
-    double turn = (Math.abs(controller.getX(Hand.kRight)) > Math.abs(controller2.getX(Hand.kRight))) ? controller.getX(Hand.kRight) : controller2.getX(Hand.kRight);
-    return (Math.abs(turn) < JOYSTICK_DEAD_ZONE) ? 0 : turn;
+  public double rightSidePower() {
+    double turn = (Math.abs(controller.getY(Hand.kRight)) > Math.abs(controller2.getY(Hand.kRight))) ? controller.getY(Hand.kRight) : controller2.getY(Hand.kRight);
+    //double turn = (Math.abs(controller.getX(Hand.kRight)) > Math.abs(controller2.getX(Hand.kRight))) ? controller.getX(Hand.kRight) : controller2.getX(Hand.kRight);
+    if(Math.abs(turn) < JOYSTICK_DEAD_ZONE)
+      return 0;
+    return (controller.getBumper(Hand.kRight) || controller.getBumper(Hand.kLeft) || controller2.getBumper(Hand.kRight) || controller2.getBumper(Hand.kLeft)) ? turn * SLOW_MOVEMENT : turn;
   }
 
   @Override
@@ -49,12 +55,12 @@ public class XBoxInput extends InputMethod {
   
   @Override
   public boolean shouldIntake() {
-    return Math.max(controller.getTriggerAxis(Hand.kLeft), controller2.getTriggerAxis(Hand.kLeft)) > TRIGGER_DEAD_ZONE;
+    return Math.max(controller.getTriggerAxis(Hand.kRight), controller2.getTriggerAxis(Hand.kRight)) > TRIGGER_DEAD_ZONE;
   }
   
   @Override
   public boolean shouldOuttake() {
-    return Math.max(controller2.getTriggerAxis(Hand.kLeft), controller.getTriggerAxis(Hand.kRight)) > TRIGGER_DEAD_ZONE;
+    return Math.max(controller.getTriggerAxis(Hand.kLeft), controller2.getTriggerAxis(Hand.kLeft)) > TRIGGER_DEAD_ZONE;
   }
 
   @Override
@@ -65,5 +71,10 @@ public class XBoxInput extends InputMethod {
   @Override
   public boolean shouldLowerElevator(){
     return controller.getBButton() || controller2.getBButton();
+  }
+
+  @Override
+  public boolean ignoreLimitSwitches(){
+    return controller.getStartButton() || controller2.getStartButton();
   }
 }
