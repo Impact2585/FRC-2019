@@ -20,6 +20,7 @@ public class RobotMap {
   public static final int INTAKE_BACK_MOTOR = 4; // wheels in the back of the intake(nearer the elevator)
 
   public static final int ELEVATOR_MOTOR = 5;
+  public static final int ELEVATOR_MOTOR_CAN_ID = 1;
 
   public static final int ELEVATOR_LIMIT_UPPER = 0;
   public static final int ELEVATOR_LIMIT_LOWER = 1;

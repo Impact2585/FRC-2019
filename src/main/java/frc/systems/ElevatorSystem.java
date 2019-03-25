@@ -8,6 +8,9 @@
 package frc.systems;
 
 import edu.wpi.first.wpilibj.Spark;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANEncoder;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.input.InputMethod;
 import frc.robot.RobotMap;
@@ -17,7 +20,9 @@ import frc.robot.RobotMap;
  */
 public class ElevatorSystem extends RobotSystem {
   private final double LIFT_SPEED = 0.7;
-  private Spark elevatorMotor;
+  //private Spark elevatorMotor;
+  private CANSparkMax elevatorMotor;
+  private CANEncoder elevatorEncoder;
   private DigitalInput upperLimit;
   private DigitalInput lowerLimit;
 
@@ -32,7 +37,9 @@ public class ElevatorSystem extends RobotSystem {
 
   @Override
   public void init() {
-    elevatorMotor = new Spark(RobotMap.ELEVATOR_MOTOR);
+    elevatorMotor = new CANSparkMax(RobotMap.ELEVATOR_MOTOR_CAN_ID, MotorType.kBrushless);
+    elevatorEncoder = new CANEncoder(elevatorMotor);
+    //elevatorMotor = new Spark(RobotMap.ELEVATOR_MOTOR);
     upperLimit = new DigitalInput(RobotMap.ELEVATOR_LIMIT_UPPER);
     lowerLimit = new DigitalInput(RobotMap.ELEVATOR_LIMIT_LOWER);
   }
@@ -59,7 +66,7 @@ public class ElevatorSystem extends RobotSystem {
    * Sets the speed of the lift motor
    */
   protected void setLiftSpeed(double speed) {
-    elevatorMotor.setSpeed(speed);
+    elevatorMotor.set(speed);
   }
 
 }

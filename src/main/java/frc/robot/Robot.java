@@ -55,6 +55,7 @@ public class Robot extends TimedRobot {
     intake.init();
     elevator.init();
     CameraServer.getInstance().startAutomaticCapture(0);
+    CameraServer.getInstance().startAutomaticCapture(1);
     currentCamera = 0;
 }
 
@@ -69,11 +70,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    /*
     int inputCamera = input.chooseCamera();
     if(inputCamera != currentCamera){
       currentCamera = inputCamera;
-      CameraServer.getInstance().startAutomaticCapture(inputCamera);
-    }
+      CameraServer.getInstance().startAutomaticCapture("Robot Camera", inputCamera);
+    } */
   }
 
   /**
