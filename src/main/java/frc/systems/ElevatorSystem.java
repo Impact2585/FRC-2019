@@ -61,11 +61,12 @@ public class ElevatorSystem extends RobotSystem {
   private void getDesiredLiftSpeed() {
     if(input.ignoreLimitSwitches())
       targetPosition += input.liftElevator() * TARGET_POSITION_CALIBRATOR;
-    if(upperLimit.get())
+    else if(upperLimit.get())
       targetPosition += (input.liftElevator() > 0) ? 0 : input.liftElevator() * TARGET_POSITION_CALIBRATOR;
-    if(lowerLimit.get())
+    else if(lowerLimit.get())
       targetPosition += (input.liftElevator() < 0) ? 0 : input.liftElevator() * TARGET_POSITION_CALIBRATOR;
-    targetPosition += input.liftElevator() * TARGET_POSITION_CALIBRATOR;
+    else
+      targetPosition += input.liftElevator() * TARGET_POSITION_CALIBRATOR;
   }
 
   /**
