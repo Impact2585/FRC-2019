@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.shuffleboard.*;
 
 import frc.input.XBoxInput;
 import frc.systems.WheelSystem;
@@ -54,8 +55,8 @@ public class Robot extends TimedRobot {
     wheels.init();
     intake.init();
     elevator.init();
-    CameraServer.getInstance().startAutomaticCapture(0);
-    CameraServer.getInstance().startAutomaticCapture(1);
+    CameraServer.getInstance().startAutomaticCapture("Elevator Camera", 0);
+    CameraServer.getInstance().startAutomaticCapture("Base Camera", 1);
     currentCamera = 0;
 }
 

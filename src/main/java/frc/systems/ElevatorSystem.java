@@ -19,12 +19,15 @@ import frc.robot.RobotMap;
  * Controls the elevator system of the robot
  */
 public class ElevatorSystem extends RobotSystem {
-  private final double LIFT_SPEED = 0.7;
+  private final double LIFT_SPEED = 0.8;
+  private final double TARGET_POSITION_CALIBRATOR = 0.5;
   //private Spark elevatorMotor;
   private CANSparkMax elevatorMotor;
   private CANEncoder elevatorEncoder;
   private DigitalInput upperLimit;
   private DigitalInput lowerLimit;
+
+  private double targetPosition; //in revolutions
 
   /**
    * Creates a new elevatorSystem
@@ -42,24 +45,27 @@ public class ElevatorSystem extends RobotSystem {
     //elevatorMotor = new Spark(RobotMap.ELEVATOR_MOTOR);
     upperLimit = new DigitalInput(RobotMap.ELEVATOR_LIMIT_UPPER);
     lowerLimit = new DigitalInput(RobotMap.ELEVATOR_LIMIT_LOWER);
+    targetPosition = 0;
   }
 
   @Override
   public void run() {
-    setLiftSpeed(getDesiredLiftSpeed());
+    //setLiftSpeed(getDesiredLiftSpeed());
+    getDesiredLiftSpeed();
+    setEncoderPosition(targetPosition);
   }
 
   /**
    * Returns the desired elevator motor speed based on the input
    */
-  private double getDesiredLiftSpeed() {
+  private void getDesiredLiftSpeed() {
     if(input.ignoreLimitSwitches())
-      return input.liftElevator() * LIFT_SPEED;
+      targetPosition += input.liftElevator() * TARGET_POSITION_CALIBRATOR;
     if(upperLimit.get())
-      return (input.liftElevator() > 0) ? 0 : input.liftElevator() * LIFT_SPEED;
+      targetPosition += (input.liftElevator() > 0) ? 0 : input.liftElevator() * TARGET_POSITION_CALIBRATOR;
     if(lowerLimit.get())
-      return (input.liftElevator() < 0) ? 0 : input.liftElevator() * LIFT_SPEED;
-    return input.liftElevator() * LIFT_SPEED;
+      targetPosition += (input.liftElevator() < 0) ? 0 : input.liftElevator() * TARGET_POSITION_CALIBRATOR;
+    targetPosition += input.liftElevator() * TARGET_POSITION_CALIBRATOR;
   }
 
   /**
@@ -69,4 +75,13 @@ public class ElevatorSystem extends RobotSystem {
     elevatorMotor.set(speed);
   }
 
+  private boolean setEncoderPosition(double position){ //can be used if elevatorEncoder.setPosition(double position) doesn't work
+    if(position != elevatorEncoder.getPosition()){
+      double diff = position - elevatorEncoder.getPosition();
+      setLiftSpeed((diff > 0) ? LIFT_SPEED : -LIFT_SPEED);
+      return false;
+    }
+    setLiftSpeed(0);
+    return true;
+  }
 }
