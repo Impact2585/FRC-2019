@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 public class XBoxInput extends InputMethod {
   private XboxController controller;
   private XboxController controller2;
-  private final double JOYSTICK_DEAD_ZONE = 0.02;
+  private final double JOYSTICK_DEAD_ZONE = 0.075;
   private final double TRIGGER_DEAD_ZONE = 0.1;
   private final double SLOW_MOVEMENT = 0.7;
   private int currentCamera = 0;
@@ -50,19 +50,42 @@ public class XBoxInput extends InputMethod {
   }
   
   @Override
+  public double liftElevator(){
+    double movement = controller2.getY(Hand.kLeft);
+    return (Math.abs(movement) < JOYSTICK_DEAD_ZONE) ? 0 : movement;
+  }
+  
+  @Override
+  public boolean levelOne(){
+    return controller2.getAButton();
+  }
+
+  @Override
+  public boolean levelTwo(){
+    return controller2.getXButton();
+  }
+
+  @Override
+  public boolean levelThree(){
+    return controller2.getYButton();
+  }
+
+  @Override
   public boolean shouldIntake() {
-    return Math.max(controller.getTriggerAxis(Hand.kRight), controller2.getTriggerAxis(Hand.kRight)) > TRIGGER_DEAD_ZONE;
+    return controller2.getTriggerAxis(Hand.kRight) > TRIGGER_DEAD_ZONE;
   }
   
   @Override
   public boolean shouldOuttake() {
-    return Math.max(controller.getTriggerAxis(Hand.kLeft), controller2.getTriggerAxis(Hand.kLeft)) > TRIGGER_DEAD_ZONE;
+    return controller2.getTriggerAxis(Hand.kLeft) > TRIGGER_DEAD_ZONE;
   }
 
-  @Override
-  public double liftElevator(){
-    double movement = controller2.getY(Hand.kLeft);
-    return (Math.abs(movement) < JOYSTICK_DEAD_ZONE) ? 0 : movement;
+  public boolean shouldIntakeHatch(){
+    return controller2.getBumper(Hand.kRight);
+  }
+
+  public boolean shouldOuttakeHatch(){
+    return controller2.getBumper(Hand.kLeft);
   }
 
   @Override

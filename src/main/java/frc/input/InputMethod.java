@@ -35,6 +35,26 @@ public abstract class InputMethod {
     return 0;
   }
 
+  public boolean levelOne(){
+    return false;
+  }
+
+  public boolean levelTwo(){
+    return false;
+  }
+
+  public boolean levelThree(){
+    return false;
+  }
+
+  public boolean shouldIntakeHatch(){
+    return false;
+  }
+
+  public boolean shouldOuttakeHatch(){
+    return false;
+  }
+
   public boolean ignoreLimitSwitches(){
     return false;
   }
