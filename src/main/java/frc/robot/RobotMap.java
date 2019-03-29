@@ -22,6 +22,8 @@ public class RobotMap {
   public static final int ELEVATOR_MOTOR = 5;
   public static final int ELEVATOR_MOTOR_CAN_ID = 1;
 
+  public static final int HATCH_INTAKE = 6;
+
   public static final int ELEVATOR_LIMIT_UPPER = 0;
   public static final int ELEVATOR_LIMIT_LOWER = 1;
   public static final int PIVOT_LIMIT_UPPER = 3;
