@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.Spark;
 import frc.input.InputMethod;
 import frc.robot.RobotMap;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.*;
 
 
 /**
@@ -47,6 +48,7 @@ public class IntakeSystem extends RobotSystem {
 
   @Override
   public void run() {
+    SmartDashboard.putNumber("Desired Pivot Speed", getDesiredPivotSpeed());
     setPivotSpeed(getDesiredPivotSpeed());
     setIntakeSpeed(getDesiredWheelSpeed());
   }
@@ -57,9 +59,9 @@ public class IntakeSystem extends RobotSystem {
   private double getDesiredPivotSpeed() {
     if(input.ignoreLimitSwitches())
       return input.pivotIntake() * PIVOT_SPEED;
-    if(pivotLimitUpper.get())
+    if(!pivotLimitUpper.get())
       return (input.pivotIntake() > 0) ? 0 : input.pivotIntake() * PIVOT_SPEED;
-    if(pivotLimitLower.get())
+    if(!pivotLimitLower.get())
       return (input.pivotIntake() < 0) ? 0 : input.pivotIntake() * PIVOT_SPEED;
     return input.pivotIntake() * PIVOT_SPEED;
   }

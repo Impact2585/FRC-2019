@@ -7,10 +7,13 @@
 
 package frc.systems;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.input.InputMethod;
 import frc.robot.RobotMap;
+import edu.wpi.first.wpilibj.networktables.*;
 
 /**
  * Controls the drivetrain of the robot
@@ -36,6 +39,7 @@ public class WheelSystem extends RobotSystem {
     Spark leftMotor = new Spark(RobotMap.LEFT_DRIVE_MOTOR);
     Spark rightMotor = new Spark(RobotMap.RIGHT_DRIVE_MOTOR);
     wheels = new DifferentialDrive(leftMotor, rightMotor);
+    pastInputs = new double[2];
   }
 
   @Override
@@ -56,4 +60,13 @@ public class WheelSystem extends RobotSystem {
     
     return adjustedInputs;
   }
+  /*NetworkTable visionTable = NetworkTable.getTable("vision");
+  public boolean pointTo(){
+   // NetworkTableInstance.getDefault().getTable("")
+    if(tapeYaw > 5)
+      wheels.tankDrive(30, -30)
+    else if (tapeYaw < -5)
+      wheels.tankDrive(-30, 30);
+    return false;
+  }*/
 }

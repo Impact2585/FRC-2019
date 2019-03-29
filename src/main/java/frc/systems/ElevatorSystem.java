@@ -14,6 +14,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.input.InputMethod;
 import frc.robot.RobotMap;
+import edu.wpi.first.wpilibj.smartdashboard.*;
 
 /**
  * Controls the elevator system of the robot
@@ -21,6 +22,9 @@ import frc.robot.RobotMap;
 public class ElevatorSystem extends RobotSystem {
   private final double LIFT_SPEED = 0.8;
   private final double TARGET_POSITION_CALIBRATOR = 0.5;
+  private final double LEVEL_ONE_HEIGHT = 1;
+  private final double LEVEL_TWO_HEIGHT = 2;
+  private final double LEVEL_THREE_HEIGHT = 3;
   //private Spark elevatorMotor;
   private CANSparkMax elevatorMotor;
   private CANEncoder elevatorEncoder;
@@ -46,29 +50,65 @@ public class ElevatorSystem extends RobotSystem {
     upperLimit = new DigitalInput(RobotMap.ELEVATOR_LIMIT_UPPER);
     lowerLimit = new DigitalInput(RobotMap.ELEVATOR_LIMIT_LOWER);
     targetPosition = 0;
+    elevatorMotor.setInverted(true);
   }
 
   @Override
   public void run() {
     //setLiftSpeed(getDesiredLiftSpeed());
-    getDesiredLiftSpeed();
-    setEncoderPosition(targetPosition);
+    setLiftSpeed(getDesiredLiftSpeed());
+    SmartDashboard.putNumber("TARGET LIFT SPEED", input.liftElevator());
+    SmartDashboard.putNumber("LIFTSPEED", getDesiredLiftSpeed());
+    SmartDashboard.putBoolean("UPPER ELEVATOR LIMIT", upperLimit.get());
+    SmartDashboard.putBoolean("LOWER ELEVATOR LIMIT", lowerLimit.get());
+    //getDesiredLiftPosition();
+    //setEncoderPosition(targetPosition);
+    SmartDashboard.putNumber("Elevator Position", elevatorEncoder.getPosition());
+  }
+
+  private double getDesiredLiftSpeed(){
+    if(input.ignoreLimitSwitches())
+      return input.liftElevator() * LIFT_SPEED;
+    if(!upperLimit.get())
+      return (input.liftElevator() < 0) ? 0 : input.liftElevator() * LIFT_SPEED;
+    if(!lowerLimit.get())
+      return (input.liftElevator() > 0) ? 0 : input.liftElevator() * LIFT_SPEED;
+    return input.liftElevator() * LIFT_SPEED;
   }
 
   /**
    * Returns the desired elevator motor speed based on the input
    */
-  private void getDesiredLiftSpeed() {
-    if(input.ignoreLimitSwitches())
-      targetPosition += input.liftElevator() * TARGET_POSITION_CALIBRATOR;
-    else if(upperLimit.get())
-      targetPosition += (input.liftElevator() > 0) ? 0 : input.liftElevator() * TARGET_POSITION_CALIBRATOR;
-    else if(lowerLimit.get())
-      targetPosition += (input.liftElevator() < 0) ? 0 : input.liftElevator() * TARGET_POSITION_CALIBRATOR;
-    else
-      targetPosition += input.liftElevator() * TARGET_POSITION_CALIBRATOR;
+  private void getDesiredLiftPosition() {
+    double liftPosition = getDesiredLiftPositionRaw();
+    if(input.ignoreLimitSwitches()){
+      targetPosition = liftPosition;
+      return;
+    }
+    if(upperLimit.get() && liftPosition > LEVEL_THREE_HEIGHT){
+      return;
+    }
+    if(lowerLimit.get() && liftPosition < LEVEL_ONE_HEIGHT){
+      return;
+    }
+    targetPosition = liftPosition;
   }
 
+  private double getDesiredLiftPositionRaw(){
+    if(Math.abs(input.liftElevator()) > 0){
+      return elevatorEncoder.getPosition() + input.liftElevator() * TARGET_POSITION_CALIBRATOR;
+    }
+    if(input.levelOne()){
+      return LEVEL_ONE_HEIGHT; 
+    }
+    if(input.levelTwo()){
+      return LEVEL_TWO_HEIGHT;
+    }
+    if(input.levelThree()){
+      return LEVEL_THREE_HEIGHT;
+    }
+    return 0;
+  }
   /**
    * Sets the speed of the lift motor
    */
@@ -77,6 +117,7 @@ public class ElevatorSystem extends RobotSystem {
   }
 
   private boolean setEncoderPosition(double position){ //can be used if elevatorEncoder.setPosition(double position) doesn't work
+    
     if(position != elevatorEncoder.getPosition()){
       double diff = position - elevatorEncoder.getPosition();
       setLiftSpeed((diff > 0) ? LIFT_SPEED : -LIFT_SPEED);
