@@ -105,4 +105,18 @@ public class XBoxInput extends InputMethod {
     }
     return currentCamera;
   }
+
+  @Override
+  public boolean targetTape(){
+    return controller.getTriggerAxis(Hand.kRight) > TRIGGER_DEAD_ZONE || controller.getTriggerAxis(Hand.kLeft) > TRIGGER_DEAD_ZONE;
+  }
+
+  @Override
+  public double arcadeDrive(){
+    if(controller.getYButton())
+      return 1;
+    if(controller.getAButton())
+      return -1;
+    return 0;
+  }
 }

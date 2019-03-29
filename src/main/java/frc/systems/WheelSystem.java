@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.input.InputMethod;
 import frc.robot.RobotMap;
-import edu.wpi.first.wpilibj.networktables.*;
+import edu.wpi.first.networktables.*;
 
 /**
  * Controls the drivetrain of the robot
@@ -25,6 +25,10 @@ public class WheelSystem extends RobotSystem {
   private DifferentialDrive wheels;
   private double[] pastInputs;
 
+  private NetworkTableEntry tapeDetected, tapeYaw;
+    private double targetAngle;
+    NetworkTableInstance instance;
+    NetworkTable visionCode;
   /**
    * Creates a new wheelSystem
    * 
@@ -36,6 +40,12 @@ public class WheelSystem extends RobotSystem {
 
   @Override
   public void init() {
+    instance = NetworkTableInstance.getDefault();
+    visionCode = instance.getTable("visionCode");
+
+    tapeDetected = visionCode.getEntry("tapeDetected");
+    tapeYaw = visionCode.getEntry("tapeYaw");
+
     Spark leftMotor = new Spark(RobotMap.LEFT_DRIVE_MOTOR);
     Spark rightMotor = new Spark(RobotMap.RIGHT_DRIVE_MOTOR);
     wheels = new DifferentialDrive(leftMotor, rightMotor);
@@ -44,9 +54,23 @@ public class WheelSystem extends RobotSystem {
 
   @Override
   public void run() {
-    double[] power = {input.leftSidePower() * DRIVE_AMT, input.rightSidePower() * DRIVE_AMT};
-    power = applyRamp(power);
-    wheels.tankDrive(power[0], power[1], false);
+    double[] power;
+    if(input.targetTape()){
+      power = pointToTape();
+    } else {
+      power = new double[]{input.leftSidePower() * DRIVE_AMT, input.rightSidePower() * DRIVE_AMT};
+      power = applyRamp(power);
+      wheels.tankDrive(power[0], power[1], false);
+    }
+    if(input.arcadeDrive() != 0){
+      power[0] += input.arcadeDrive() * 0.3;
+      power[1] += input.arcadeDrive() * 0.3;
+    }
+    if(power[0] > 100)
+      power[0] = 100;
+    if(power[1] > 100)
+      power[1] = 100;
+    wheels.tankDrive(power[0], power[1]);
   }
 
   public double[] applyRamp (double[] inputs){
@@ -60,13 +84,26 @@ public class WheelSystem extends RobotSystem {
     
     return adjustedInputs;
   }
-  /*NetworkTable visionTable = NetworkTable.getTable("vision");
-  public boolean pointTo(){
-   // NetworkTableInstance.getDefault().getTable("")
-    if(tapeYaw > 5)
-      wheels.tankDrive(30, -30)
-    else if (tapeYaw < -5)
-      wheels.tankDrive(-30, 30);
-    return false;
-  }*/
+
+  public double[] pointToTape(){
+    double[] power = new double[2];
+    if(tapeYaw.getBoolean(false)){
+      if(tapeYaw.getDouble(0) > 5){
+        power[0] = 30;
+        power[1] = -30;
+      }
+      if(tapeYaw.getDouble(0) < -5){
+        power[0] = -30;
+        power[1] = 30;
+      }
+      else {
+        power[0] = 0;
+        power[1] = 0;
+      }
+    } else {
+      power[0] = 0;
+      power[1] = 0;
+    }
+    return power;
+  }
 }

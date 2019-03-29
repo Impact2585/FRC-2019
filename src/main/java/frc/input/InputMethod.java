@@ -62,4 +62,12 @@ public abstract class InputMethod {
   public int chooseCamera(){
     return 0;
   }
+
+  public boolean targetTape(){
+    return false;
+  }
+
+  public double arcadeDrive(){
+    return 0;
+  }
 }
