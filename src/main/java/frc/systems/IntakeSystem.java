@@ -48,6 +48,7 @@ public class IntakeSystem extends RobotSystem {
 
   @Override
   public void run() {
+    SmartDashboard.putNumber("Desired Pivot Speed", getDesiredPivotSpeed());
     setPivotSpeed(getDesiredPivotSpeed());
     setIntakeSpeed(getDesiredWheelSpeed());
   }
@@ -56,17 +57,13 @@ public class IntakeSystem extends RobotSystem {
    * Returns the desired pivot motor speed based on the input
    */
   private double getDesiredPivotSpeed() {
-    if (input.shouldPivotUp() && input.shouldPivotDown())
-      return 0;
-    
-    SmartDashboard.putBoolean("Upper limit", pivotLimitUpper.get());
-    SmartDashboard.putBoolean("Lower limit", pivotLimitLower.get());
-
-    if (input.shouldPivotUp())
-      return (pivotLimitUpper.get()) ? PIVOT_SPEED : 0;
-    if (input.shouldPivotDown()) 
-      return (pivotLimitLower.get()) ? -PIVOT_SPEED : 0;
-    return 0;
+    if(input.ignoreLimitSwitches())
+      return input.pivotIntake() * PIVOT_SPEED;
+    if(!pivotLimitUpper.get())
+      return (input.pivotIntake() > 0) ? 0 : input.pivotIntake() * PIVOT_SPEED;
+    if(!pivotLimitLower.get())
+      return (input.pivotIntake() < 0) ? 0 : input.pivotIntake() * PIVOT_SPEED;
+    return input.pivotIntake() * PIVOT_SPEED;
   }
 
   /**

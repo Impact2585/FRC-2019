@@ -10,10 +10,10 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.cameraserver.CameraServer;
+
 import frc.input.XBoxInput;
-import frc.systems.WheelSystem;
-import frc.systems.IntakeSystem;
-import frc.systems.ElevatorSystem;
+import frc.systems.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -31,7 +31,9 @@ public class Robot extends TimedRobot {
   private WheelSystem wheels;
   private IntakeSystem intake;
   private ElevatorSystem elevator;
+  private HatchSystem hatch;
 
+  private int currentCamera;
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -42,15 +44,21 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
 
+
     input = new XBoxInput();
     wheels = new WheelSystem(input);
     intake = new IntakeSystem(input);
     elevator = new ElevatorSystem(input);
+    hatch = new HatchSystem(input);
 
     wheels.init();
     intake.init();
     elevator.init();
-  }
+    hatch.init();
+    CameraServer.getInstance().startAutomaticCapture("Elevator Camera", 0);
+    CameraServer.getInstance().startAutomaticCapture("Base Camera", 1);
+    currentCamera = 0;
+}
 
   /**
    * This function is called every robot packet, no matter the mode. Use this for
@@ -63,6 +71,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    /*
+    int inputCamera = input.chooseCamera();
+    if(inputCamera != currentCamera){
+      currentCamera = inputCamera;
+      CameraServer.getInstance().startAutomaticCapture("Robot Camera", inputCamera);
+    } */
   }
 
   /**
@@ -89,15 +103,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    switch (m_autoSelected) {
-    case kCustomAuto:
-      // Put custom auto code here
-      break;
-    case kDefaultAuto:
-    default:
-      // Put default auto code here
-      break;
-    }
+    wheels.run();
+    intake.run();
+    elevator.run();
+    hatch.run();
   }
 
   /**
@@ -108,6 +117,7 @@ public class Robot extends TimedRobot {
     wheels.run();
     intake.run();
     elevator.run();
+    hatch.run();
   }
 
   /**
@@ -115,5 +125,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+    wheels.run();
+    intake.run();
+    elevator.run();
+    hatch.run();
   }
 }

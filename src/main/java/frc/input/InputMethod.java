@@ -11,20 +11,16 @@ package frc.input;
  * Operator controls for the robot
  */
 public abstract class InputMethod {
-  public double forwardAmount() {
+  public double leftSidePower() {
     return 0;
   }
 
-  public double turnAmount() {
+  public double rightSidePower() {
     return 0;
   }
 
-  public boolean shouldPivotUp() {
-    return false;
-  }
-
-  public boolean shouldPivotDown() {
-    return false;
+  public double pivotIntake() {
+    return 0;
   }
 
   public boolean shouldIntake() {
@@ -35,11 +31,43 @@ public abstract class InputMethod {
     return false;
   }
 
-  public boolean shouldLiftElevator(){
+  public double liftElevator(){
+    return 0;
+  }
+
+  public boolean levelOne(){
     return false;
   }
 
-  public boolean shouldLowerElevator(){
+  public boolean levelTwo(){
     return false;
+  }
+
+  public boolean levelThree(){
+    return false;
+  }
+
+  public boolean shouldIntakeHatch(){
+    return false;
+  }
+
+  public boolean shouldOuttakeHatch(){
+    return false;
+  }
+
+  public boolean ignoreLimitSwitches(){
+    return false;
+  }
+
+  public int chooseCamera(){
+    return 0;
+  }
+
+  public boolean targetTape(){
+    return false;
+  }
+
+  public double arcadeDrive(){
+    return 0;
   }
 }
