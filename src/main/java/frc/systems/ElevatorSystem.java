@@ -7,7 +7,6 @@
 
 package frc.systems;
 
-import edu.wpi.first.wpilibj.Spark;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -22,6 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.*;
 public class ElevatorSystem extends RobotSystem {
   private final double LIFT_SPEED = 0.8;
   private final double TARGET_POSITION_CALIBRATOR = 0.5;
+  private final double MAX_DIFF = 1;
   private final double LEVEL_ONE_HEIGHT = 1;
   private final double LEVEL_TWO_HEIGHT = 2;
   private final double LEVEL_THREE_HEIGHT = 3;
@@ -46,7 +46,6 @@ public class ElevatorSystem extends RobotSystem {
   public void init() {
     elevatorMotor = new CANSparkMax(RobotMap.ELEVATOR_MOTOR_CAN_ID, MotorType.kBrushless);
     elevatorEncoder = new CANEncoder(elevatorMotor);
-    //elevatorMotor = new Spark(RobotMap.ELEVATOR_MOTOR);
     upperLimit = new DigitalInput(RobotMap.ELEVATOR_LIMIT_UPPER);
     lowerLimit = new DigitalInput(RobotMap.ELEVATOR_LIMIT_LOWER);
     targetPosition = 0;
@@ -55,15 +54,21 @@ public class ElevatorSystem extends RobotSystem {
 
   @Override
   public void run() {
-    //setLiftSpeed(getDesiredLiftSpeed());
-    setLiftSpeed(getDesiredLiftSpeed());
-    SmartDashboard.putNumber("TARGET LIFT SPEED", input.liftElevator());
-    SmartDashboard.putNumber("LIFTSPEED", getDesiredLiftSpeed());
     SmartDashboard.putBoolean("UPPER ELEVATOR LIMIT", upperLimit.get());
     SmartDashboard.putBoolean("LOWER ELEVATOR LIMIT", lowerLimit.get());
+
     //getDesiredLiftPosition();
     //setEncoderPosition(targetPosition);
+    setLiftSpeed(getDesiredLiftSpeed());
+
     SmartDashboard.putNumber("Elevator Position", elevatorEncoder.getPosition());
+  }
+
+  /**
+   * Sets the speed of the lift motor
+   */
+  protected void setLiftSpeed(double speed) {
+    elevatorMotor.set(speed);
   }
 
   private double getDesiredLiftSpeed(){
@@ -76,6 +81,17 @@ public class ElevatorSystem extends RobotSystem {
     return input.liftElevator() * LIFT_SPEED;
   }
 
+  private boolean setEncoderPosition(double position){ //can be used if elevatorEncoder.setPosition(double position) doesn't work
+    double diff = position - elevatorEncoder.getPosition();
+
+    if(Math.abs(diff) > MAX_DIFF){
+      setLiftSpeed((diff > 0) ? LIFT_SPEED : -LIFT_SPEED);
+      return false;
+    }
+    setLiftSpeed(0);
+    return true;
+  }
+
   /**
    * Returns the desired elevator motor speed based on the input
    */
@@ -85,10 +101,10 @@ public class ElevatorSystem extends RobotSystem {
       targetPosition = liftPosition;
       return;
     }
-    if(upperLimit.get() && liftPosition > LEVEL_THREE_HEIGHT){
+    if(!upperLimit.get() && liftPosition > targetPosition){
       return;
     }
-    if(lowerLimit.get() && liftPosition < LEVEL_ONE_HEIGHT){
+    if(!lowerLimit.get() && liftPosition < targetPosition){
       return;
     }
     targetPosition = liftPosition;
@@ -108,22 +124,5 @@ public class ElevatorSystem extends RobotSystem {
       return LEVEL_THREE_HEIGHT;
     }
     return 0;
-  }
-  /**
-   * Sets the speed of the lift motor
-   */
-  protected void setLiftSpeed(double speed) {
-    elevatorMotor.set(speed);
-  }
-
-  private boolean setEncoderPosition(double position){ //can be used if elevatorEncoder.setPosition(double position) doesn't work
-    
-    if(position != elevatorEncoder.getPosition()){
-      double diff = position - elevatorEncoder.getPosition();
-      setLiftSpeed((diff > 0) ? LIFT_SPEED : -LIFT_SPEED);
-      return false;
-    }
-    setLiftSpeed(0);
-    return true;
   }
 }

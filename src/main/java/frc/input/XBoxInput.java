@@ -19,7 +19,6 @@ public class XBoxInput extends InputMethod {
   private final double JOYSTICK_DEAD_ZONE = 0.075;
   private final double TRIGGER_DEAD_ZONE = 0.1;
   private final double SLOW_MOVEMENT = 0.7;
-  private int currentCamera = 0;
 
   public XBoxInput() {
     // 0 is the port # of the driver station the joystick is plugged into
@@ -32,7 +31,7 @@ public class XBoxInput extends InputMethod {
     double forward = controller.getY(Hand.kLeft);
     if(Math.abs(forward) < JOYSTICK_DEAD_ZONE)
       return 0;
-    return (controller.getBumper(Hand.kRight) || controller.getBumper(Hand.kLeft)) ? forward * SLOW_MOVEMENT : forward;
+    return forward * SLOW_MOVEMENT;
   }
 
   @Override
@@ -40,7 +39,7 @@ public class XBoxInput extends InputMethod {
     double forward = controller.getY(Hand.kRight);
     if(Math.abs(forward) < JOYSTICK_DEAD_ZONE)
       return 0;
-    return (controller.getBumper(Hand.kRight) || controller.getBumper(Hand.kLeft)) ? forward * SLOW_MOVEMENT : forward;
+    return forward * SLOW_MOVEMENT;
   }
 
   @Override
@@ -57,35 +56,40 @@ public class XBoxInput extends InputMethod {
   
   @Override
   public boolean levelOne(){
-    return controller2.getAButton();
+    //return controller2.getAButton();
+    return false;
   }
 
   @Override
   public boolean levelTwo(){
-    return controller2.getXButton();
+    //return controller2.getXButton();
+    return false;
   }
 
   @Override
   public boolean levelThree(){
-    return controller2.getYButton();
+    //return controller2.getYButton();
+    return false;
   }
 
   @Override
   public boolean shouldIntake() {
-    return controller2.getTriggerAxis(Hand.kRight) > TRIGGER_DEAD_ZONE;
+    return controller.getTriggerAxis(Hand.kRight) > TRIGGER_DEAD_ZONE || controller2.getTriggerAxis(Hand.kRight) > TRIGGER_DEAD_ZONE;
   }
   
   @Override
   public boolean shouldOuttake() {
-    return controller2.getTriggerAxis(Hand.kLeft) > TRIGGER_DEAD_ZONE;
+    return controller.getTriggerAxis(Hand.kLeft) > TRIGGER_DEAD_ZONE || controller2.getTriggerAxis(Hand.kLeft) > TRIGGER_DEAD_ZONE;
   }
 
   public boolean shouldIntakeHatch(){
-    return controller2.getBumper(Hand.kRight);
+    return false;
+    //return controller2.getBumper(Hand.kRight);
   }
 
   public boolean shouldOuttakeHatch(){
-    return controller2.getBumper(Hand.kLeft);
+    return false;
+    //eturn controller2.getBumper(Hand.kLeft);
   }
 
   @Override
@@ -94,29 +98,18 @@ public class XBoxInput extends InputMethod {
   }
 
   @Override
-  public int chooseCamera(){
-    if(controller2.getBumper(Hand.kLeft)){
-      currentCamera = 0;
-      return 0;
-    }
-    if(controller2.getBumper(Hand.kRight)){
-      currentCamera = 1;
-      return 1;
-    }
-    return currentCamera;
-  }
-
-  @Override
   public boolean targetTape(){
-    return controller.getTriggerAxis(Hand.kRight) > TRIGGER_DEAD_ZONE || controller.getTriggerAxis(Hand.kLeft) > TRIGGER_DEAD_ZONE;
+    return false;
+    //return controller.getTriggerAxis(Hand.kRight) > TRIGGER_DEAD_ZONE || controller.getTriggerAxis(Hand.kLeft) > TRIGGER_DEAD_ZONE;
   }
 
   @Override
   public double arcadeDrive(){
-    if(controller.getYButton())
+    return 0;
+    /* if(controller.getYButton())
       return 1;
     if(controller.getAButton())
       return -1;
-    return 0;
+    return 0; */
   }
 }

@@ -33,7 +33,6 @@ public class Robot extends TimedRobot {
   private ElevatorSystem elevator;
   private HatchSystem hatch;
 
-  private int currentCamera;
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -57,7 +56,6 @@ public class Robot extends TimedRobot {
     hatch.init();
     CameraServer.getInstance().startAutomaticCapture("Elevator Camera", 0);
     CameraServer.getInstance().startAutomaticCapture("Base Camera", 1);
-    currentCamera = 0;
 }
 
   /**
@@ -96,6 +94,7 @@ public class Robot extends TimedRobot {
     m_autoSelected = m_chooser.getSelected();
     // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + m_autoSelected);
+    wheels.driveStraight(1);
   }
 
   /**
@@ -103,10 +102,11 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    wheels.run();
-    intake.run();
-    elevator.run();
-    hatch.run();
+    //wheels.run();
+    //intake.run();
+    //elevator.run();
+    //hatch.run();
+    //SmartDashboard.putNumber("Gyro Angle", wheels.gyro.getAngle());
   }
 
   /**

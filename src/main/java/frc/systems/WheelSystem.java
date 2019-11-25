@@ -11,9 +11,15 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.Timer;
 import frc.input.InputMethod;
 import frc.robot.RobotMap;
+
+import java.sql.Time;
+
 import edu.wpi.first.networktables.*;
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+
 
 /**
  * Controls the drivetrain of the robot
@@ -21,9 +27,13 @@ import edu.wpi.first.networktables.*;
 public class WheelSystem extends RobotSystem {
   private final double DRIVE_AMT = 1;
   private final double RAMP_AMT = 0.25;
+  private final double ROBOT_SPEED = 1; // robot speed at half power, ft/s
+  private final double ANGLE_TOLERANCE = 5;
 
   private DifferentialDrive wheels;
   private double[] pastInputs;
+  public ADXRS450_Gyro gyro;
+  
 
   private NetworkTableEntry tapeDetected, tapeYaw;
     private double targetAngle;
@@ -50,6 +60,9 @@ public class WheelSystem extends RobotSystem {
     Spark rightMotor = new Spark(RobotMap.RIGHT_DRIVE_MOTOR);
     wheels = new DifferentialDrive(leftMotor, rightMotor);
     pastInputs = new double[2];
+
+    gyro = new ADXRS450_Gyro();
+    gyro.calibrate();
   }
 
   @Override
@@ -66,7 +79,7 @@ public class WheelSystem extends RobotSystem {
       power[0] += input.arcadeDrive() * 0.3;
       power[1] += input.arcadeDrive() * 0.3;
     }
-    if(power[0] > 100)
+    if(power[0] > 100) // try changing to 1
       power[0] = 100;
     if(power[1] > 100)
       power[1] = 100;
@@ -105,5 +118,31 @@ public class WheelSystem extends RobotSystem {
       power[1] = 0;
     }
     return power;
+  }
+
+  public void driveStraight(int distance){ // distance in feet
+    double time = distance / ROBOT_SPEED;
+    Timer t = new Timer();
+    t.start();
+    while(t.get() < time){
+      wheels.tankDrive(.5, .5);
+    }
+    t.stop();
+    wheels.tankDrive(0,0);
+  }
+
+  public void turn(int angle){ // default is (counter)clockwise?
+    gyro.reset();
+    double diff = angle - gyro.getAngle();
+    while(Math.abs(diff) > ANGLE_TOLERANCE){
+      if(diff > 0){
+        wheels.tankDrive(.5, -.5);
+      } else if(diff < 0){
+        wheels.tankDrive(-.5, .5);
+      }
+      diff = angle - gyro.getAngle();
+    }
+    gyro.reset();
+
   }
 }
