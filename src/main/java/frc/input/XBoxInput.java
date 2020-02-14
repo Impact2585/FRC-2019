@@ -28,18 +28,28 @@ public class XBoxInput extends InputMethod {
 
   @Override
   public double leftSidePower() {
-    double forward = controller.getY(Hand.kLeft);
+    /*double forward = controller.getY(Hand.kLeft);
     if(Math.abs(forward) < JOYSTICK_DEAD_ZONE)
       return 0;
-    return forward * SLOW_MOVEMENT;
+    return forward * SLOW_MOVEMENT;*/
+    double forward = controller.getY(Hand.kLeft);
+    double turn = controller.getX(Hand.kRight);
+    if(Math.abs(forward + turn) < JOYSTICK_DEAD_ZONE)
+      return 0;
+      return (forward + turn) * SLOW_MOVEMENT;
   }
 
   @Override
   public double rightSidePower() {
-    double forward = controller.getY(Hand.kRight);
+   /* double forward = controller.getY(Hand.kRight);
     if(Math.abs(forward) < JOYSTICK_DEAD_ZONE)
       return 0;
-    return forward * SLOW_MOVEMENT;
+    return forward * SLOW_MOVEMENT;*/
+    double forward = controller.getY(Hand.kLeft);
+    double turn = controller.getX(Hand.kRight);
+    if(Math.abs(forward - turn) < JOYSTICK_DEAD_ZONE)
+      return 0;
+      return (forward - turn) * SLOW_MOVEMENT;
   }
 
   @Override
@@ -99,7 +109,7 @@ public class XBoxInput extends InputMethod {
 
   @Override
   public boolean targetTape(){
-    return false;
+    return controller.getAButton();
     //return controller.getTriggerAxis(Hand.kRight) > TRIGGER_DEAD_ZONE || controller.getTriggerAxis(Hand.kLeft) > TRIGGER_DEAD_ZONE;
   }
 
