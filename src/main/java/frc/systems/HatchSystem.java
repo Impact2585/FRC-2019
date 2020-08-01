@@ -10,7 +10,6 @@ package frc.systems;
 import edu.wpi.first.wpilibj.Spark;
 import frc.input.InputMethod;
 import frc.robot.RobotMap;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.*;
 
 

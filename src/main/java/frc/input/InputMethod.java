@@ -59,10 +59,6 @@ public abstract class InputMethod {
     return false;
   }
 
-  public int chooseCamera(){
-    return 0;
-  }
-
   public boolean targetTape(){
     return false;
   }

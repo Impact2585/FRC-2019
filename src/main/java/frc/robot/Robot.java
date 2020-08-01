@@ -8,6 +8,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.cameraserver.CameraServer;
@@ -33,7 +34,8 @@ public class Robot extends TimedRobot {
   private ElevatorSystem elevator;
   private HatchSystem hatch;
 
-  private int currentCamera;
+  private double autoStartTime;
+
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -57,7 +59,6 @@ public class Robot extends TimedRobot {
     hatch.init();
     CameraServer.getInstance().startAutomaticCapture("Elevator Camera", 0);
     CameraServer.getInstance().startAutomaticCapture("Base Camera", 1);
-    currentCamera = 0;
 }
 
   /**
@@ -96,6 +97,9 @@ public class Robot extends TimedRobot {
     m_autoSelected = m_chooser.getSelected();
     // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + m_autoSelected);
+    autoStartTime = Timer.getFPGATimestamp();
+
+    // OPTION 1: PUT AUTONOMOUS SEQUENCE IN HERE
   }
 
   /**
@@ -103,10 +107,30 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    wheels.run();
-    intake.run();
-    elevator.run();
-    hatch.run();
+    double currTime = Timer.getFPGATimestamp();
+    double timeElapsed = currTime - autoStartTime;    
+    
+    /*
+    OPTION 2: PUT IN ITERATIVE SEQUENCE IN HERE AS FOLLOWS:
+    if(timeElapsed < 2){
+      driveStraight(.5);
+    } else if (timeElapsed < 5){
+      turn(90);
+    } else if (timeElapsed < 10){
+      driveStraight(-.5);
+    } else {
+      //wheels.run();
+      //intake.run();
+      //elevator.run();
+      //hatch.run();
+    }
+
+    */
+
+    //wheels.run();
+    //intake.run();
+    //elevator.run();
+    //hatch.run();
   }
 
   /**
